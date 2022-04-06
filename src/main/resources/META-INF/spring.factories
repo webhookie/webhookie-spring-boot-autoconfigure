@@ -1,0 +1,12 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.webhookie.config.AopConfig,\
+  com.webhookie.security.SecurityConfig,\
+  com.webhookie.security.TokenDecoderConfig,\
+  com.webhookie.security.SecurityBeans,\
+  com.webhookie.security.HealthBeans,\
+  com.webhookie.config.LoggerConfig,\
+  com.webhookie.config.CommonBeans,\
+  com.webhookie.config.WebClientConfig,\
+  com.webhookie.config.web.WebConfig,\
+  com.webhookie.config.web.OpenAPIConfig,\
+  com.webhookie.config.web.GlobalExceptionHandler

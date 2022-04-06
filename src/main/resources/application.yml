@@ -1,0 +1,22 @@
+spring:
+  config:
+    import: optional:file:${WH_EXTRA_CONFIG_YML_FILE:config/yml}
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /manage
+  endpoint:
+    health:
+      show-details: ALWAYS
+  info:
+    git:
+      mode: full
+logging:
+  pattern:
+    file: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID}){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} - %X{dd.trace_id:-0} %X{dd.span_id:-0} - %m%n%wEx"
