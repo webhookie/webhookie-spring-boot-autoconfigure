@@ -24,7 +24,6 @@ package com.webhookie.config
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer
 import com.webhookie.common.service.IdGenerator
@@ -48,14 +47,6 @@ import java.time.Clock
  */
 @Configuration
 class CommonBeans {
-/*
-  @Bean
-  fun objectMapper(): ObjectMapper {
-    return ObjectMapper().registerModule(JavaTimeModule())
-  }
-
-
-*/
   @Bean
   fun jsonCustomizer(): Jackson2ObjectMapperBuilderCustomizer {
     return Jackson2ObjectMapperBuilderCustomizer { builder: Jackson2ObjectMapperBuilder ->

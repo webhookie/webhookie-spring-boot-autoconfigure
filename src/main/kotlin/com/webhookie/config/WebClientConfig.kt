@@ -108,6 +108,22 @@ class WebClientConfig {
 
   @Bean
   @Scope("prototype")
+  fun oauth2SignorIntercomClient(basicAuthWebClientBuilder: WebClient.Builder): WebClient {
+    return basicAuthWebClientBuilder
+      .baseUrl("${Constants.Services.OAUTH2_SIGNOR}${Constants.Intercom.INTERCOM_PATH}")
+      .build()
+  }
+
+  @Bean
+  @Scope("prototype")
+  fun hmacSignorIntercomClient(basicAuthWebClientBuilder: WebClient.Builder): WebClient {
+    return basicAuthWebClientBuilder
+      .baseUrl("${Constants.Services.HMAC_SIGNOR}${Constants.Intercom.INTERCOM_PATH}")
+      .build()
+  }
+
+  @Bean
+  @Scope("prototype")
   fun trafficIntercomServiceClient(basicAuthWebClientBuilder: WebClient.Builder): WebClient {
     return basicAuthWebClientBuilder
       .baseUrl("${Constants.Services.TRAFFIC_SERVICE}${Constants.Intercom.INTERCOM_PATH}")

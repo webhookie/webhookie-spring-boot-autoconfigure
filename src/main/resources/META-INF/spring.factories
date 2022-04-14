@@ -6,6 +6,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.webhookie.security.HealthBeans,\
   com.webhookie.config.LoggerConfig,\
   com.webhookie.config.CommonBeans,\
+  com.webhookie.config.CryptoConfig,\
   com.webhookie.config.WebClientConfig,\
   com.webhookie.config.web.WebConfig,\
   com.webhookie.config.web.OpenAPIConfig,\
