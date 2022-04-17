@@ -10,4 +10,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.webhookie.config.WebClientConfig,\
   com.webhookie.config.web.WebConfig,\
   com.webhookie.config.web.OpenAPIConfig,\
+  com.webhookie.config.DebugAgentConfig,\
   com.webhookie.config.web.GlobalExceptionHandler

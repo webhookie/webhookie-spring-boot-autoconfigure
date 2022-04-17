@@ -34,6 +34,8 @@ extra["springCloudVersion"] = "2021.0.1"
 extra["springdocVersion"] = "1.5.12"
 
 dependencies {
+  api("io.projectreactor:reactor-tools")
+
   compileOnly(project(":webhookie-common"))
   compileOnly(project(":webhookie-security-autoconfigure"))
   compileOnly("org.springframework.boot:spring-boot-starter-webflux")
