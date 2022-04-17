@@ -108,17 +108,17 @@ class WebClientConfig {
 
   @Bean
   @Scope("prototype")
-  fun oauth2SignorIntercomClient(basicAuthWebClientBuilder: WebClient.Builder): WebClient {
+  fun oauth2SignerIntercomClient(basicAuthWebClientBuilder: WebClient.Builder): WebClient {
     return basicAuthWebClientBuilder
-      .baseUrl("${Constants.Services.OAUTH2_SIGNOR}${Constants.Intercom.INTERCOM_PATH}")
+      .baseUrl("${Constants.Services.OAUTH2_SIGNER}${Constants.Intercom.INTERCOM_PATH}")
       .build()
   }
 
   @Bean
   @Scope("prototype")
-  fun hmacSignorIntercomClient(basicAuthWebClientBuilder: WebClient.Builder): WebClient {
+  fun hmacSignerIntercomClient(basicAuthWebClientBuilder: WebClient.Builder): WebClient {
     return basicAuthWebClientBuilder
-      .baseUrl("${Constants.Services.HMAC_SIGNOR}${Constants.Intercom.INTERCOM_PATH}")
+      .baseUrl("${Constants.Services.HMAC_SIGNER}${Constants.Intercom.INTERCOM_PATH}")
       .build()
   }
 
@@ -208,7 +208,7 @@ class WebClientConfig {
 
   @Bean
   @Scope("prototype")
-  fun webhookServiceClient(oauth2WebClientBuilder: WebClient.Builder): WebClient {
+  fun webhookApiRepoClient(oauth2WebClientBuilder: WebClient.Builder): WebClient {
     return oauth2WebClientBuilder
       .baseUrl(Constants.Services.WEBHOOK_REPO_SERVICE)
       .build()
