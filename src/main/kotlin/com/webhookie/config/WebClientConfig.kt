@@ -210,7 +210,7 @@ class WebClientConfig {
   @Scope("prototype")
   fun webhookApiRepoClient(oauth2WebClientBuilder: WebClient.Builder): WebClient {
     return oauth2WebClientBuilder
-      .baseUrl(Constants.Services.WEBHOOK_REPO_SERVICE)
+      .baseUrl(Constants.Services.WEBHOOK_REPO)
       .build()
   }
 
