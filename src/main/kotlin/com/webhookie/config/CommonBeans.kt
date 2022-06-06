@@ -30,6 +30,7 @@ import com.webhookie.common.service.IdGenerator
 import com.webhookie.common.service.ReactiveObjectMapper
 import com.webhookie.common.service.TimeMachine
 import com.webhookie.config.health.WebhookieHealthIndicator
+import com.webhookie.config.web.GlobalExceptionHandler
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
@@ -47,6 +48,12 @@ import java.time.Clock
  */
 @Configuration
 class CommonBeans {
+  @Bean
+  fun globalExceptionHandler(rom: ReactiveObjectMapper): GlobalExceptionHandler {
+    return GlobalExceptionHandler(rom)
+  }
+
+
   @Bean
   fun jsonCustomizer(): Jackson2ObjectMapperBuilderCustomizer {
     return Jackson2ObjectMapperBuilderCustomizer { builder: Jackson2ObjectMapperBuilder ->
@@ -73,9 +80,9 @@ class CommonBeans {
     = ReactiveObjectMapper(objectMapper)
 
   @Bean
-  @ConditionalOnBean(BuildProperties::class)
-  fun webhookieHealthIndicator(bp: BuildProperties): WebhookieHealthIndicator =
-    WebhookieHealthIndicator(bp)
+  fun webhookieHealthIndicator(bp: BuildProperties): WebhookieHealthIndicator {
+    return WebhookieHealthIndicator(bp)
+  }
 
 /*
   @Bean
