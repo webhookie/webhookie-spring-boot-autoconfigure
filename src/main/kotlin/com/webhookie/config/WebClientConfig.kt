@@ -208,6 +208,14 @@ class WebClientConfig {
 
   @Bean
   @Scope("prototype")
+  fun transformationServiceClient(oauth2WebClientBuilder: WebClient.Builder): WebClient {
+    return oauth2WebClientBuilder
+      .baseUrl(Constants.Services.TRANSFORMATION_SERVICE)
+      .build()
+  }
+
+  @Bean
+  @Scope("prototype")
   fun webhookApiRepoClient(oauth2WebClientBuilder: WebClient.Builder): WebClient {
     return oauth2WebClientBuilder
       .baseUrl(Constants.Services.WEBHOOK_REPO)
