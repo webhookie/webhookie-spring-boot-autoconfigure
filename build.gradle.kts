@@ -1,37 +1,15 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-  id("org.springframework.boot") version "2.7.2"
-  id("io.spring.dependency-management") version "1.0.12.RELEASE"
   kotlin("jvm") version "1.6.21"
   kotlin("plugin.spring") version "1.6.21"
   kotlin("plugin.allopen") version "1.6.21"
   kotlin("kapt") version "1.6.21"
 }
 
-kapt.includeCompileClasspath = false
-
-allOpen {
-  annotation("com.webhookie.common.annotation.Open")
-  // annotations("com.another.Annotation", "com.third.Annotation")
-}
-
-group = "com.webhookie"
-version = "2.0.0-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_17
-
 configurations {
   compileOnly {
     extendsFrom(configurations.annotationProcessor.get())
   }
 }
-
-repositories {
-  mavenCentral()
-}
-
-extra["springCloudVersion"] = "2021.0.3"
-extra["springdocVersion"] = "1.5.12"
 
 dependencies {
   api("io.projectreactor:reactor-tools")
@@ -67,19 +45,4 @@ dependencyManagement {
   imports {
     mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
   }
-}
-
-tasks.withType<KotlinCompile> {
-  kotlinOptions {
-    freeCompilerArgs = listOf("-Xjsr305=strict")
-    jvmTarget = "17"
-  }
-}
-
-tasks.withType<Test> {
-  useJUnitPlatform()
-}
-
-springBoot {
-  buildInfo()
 }
