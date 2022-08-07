@@ -37,11 +37,13 @@ class WebhookieHealthIndicator(
   private val buildProperties: BuildProperties,
 ): ReactiveHealthIndicator {
   override fun health(): Mono<Health> {
+    val buildNumberKey = "buildNumber"
     return Health
       .up()
       .withDetail("build", mapOf(
         "version" to buildProperties.version,
-        "time" to buildProperties.time
+        "time" to buildProperties.time,
+        buildNumberKey to buildProperties.get(buildNumberKey)
       ))
       .build()
       .toMono()
