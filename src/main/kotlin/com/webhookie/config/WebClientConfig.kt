@@ -138,6 +138,112 @@ class WebClientConfig {
     }
   }
 
+  class Intercom {
+    companion object {
+      fun hmacSigner(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
+        return createIntercomHttpServiceProxyFactoryFor(
+          webClientBuilder,
+          Constants.Services.HMAC_SIGNER
+        )
+      }
+
+      fun oauth2Signer(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
+        return createIntercomHttpServiceProxyFactoryFor(
+          webClientBuilder,
+          Constants.Services.OAUTH2_SIGNER
+        )
+      }
+
+      fun trafficService(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
+        return createIntercomHttpServiceProxyFactoryFor(
+          webClientBuilder,
+          Constants.Services.TRAFFIC_SERVICE
+        )
+      }
+
+      fun adminService(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
+        return createIntercomHttpServiceProxyFactoryFor(
+          webClientBuilder,
+          Constants.Services.ADMIN_SERVICE
+        )
+      }
+    }
+  }
+
+  class OAuth {
+    companion object {
+      fun hmacSigner(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
+        return createHttpServiceProxyFactoryFor(
+          webClientBuilder,
+          Constants.Services.HMAC_SIGNER
+        )
+      }
+
+      fun oauth2Signer(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
+        return createHttpServiceProxyFactoryFor(
+          webClientBuilder,
+          Constants.Services.OAUTH2_SIGNER
+        )
+      }
+
+      fun trafficService(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
+        return createHttpServiceProxyFactoryFor(
+          webClientBuilder,
+          Constants.Services.TRAFFIC_SERVICE
+        )
+      }
+
+      fun transformationService(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
+        return createHttpServiceProxyFactoryFor(
+          webClientBuilder,
+          Constants.Services.TRANSFORMATION_SERVICE
+        )
+      }
+
+      fun webhookApiRepo(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
+        return createHttpServiceProxyFactoryFor(
+          webClientBuilder,
+          Constants.Services.WEBHOOK_REPO
+        )
+      }
+
+      fun adminService(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
+        return createHttpServiceProxyFactoryFor(
+          webClientBuilder,
+          Constants.Services.ADMIN_SERVICE
+        )
+      }
+
+      fun profileService(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
+        return createHttpServiceProxyFactoryFor(
+          webClientBuilder,
+          Constants.Services.PROFILE_SERVICE
+        )
+      }
+
+      fun subscriptionService(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
+        return createHttpServiceProxyFactoryFor(
+          webClientBuilder,
+          Constants.Services.SUBSCRIPTION_SERVICE
+        )
+      }
+
+      fun apiIngress(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
+        return createHttpServiceProxyFactoryFor(
+          webClientBuilder,
+          Constants.Services.API_INGRESS
+        )
+      }
+
+      fun httpPublisher(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
+        return createHttpServiceProxyFactoryFor(
+          webClientBuilder,
+          Constants.Services.HTTP_PUBLISHER
+        )
+      }
+    }
+  }
+
   companion object {
     const val TOKEN_HEADER_KEY = "AUTHORIZATION_TOKEN_HEADER_KEY"
 

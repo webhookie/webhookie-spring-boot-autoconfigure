@@ -1,6 +1,5 @@
 package com.webhookie.config
 
-import com.webhookie.common.Constants
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.client.WebClient
@@ -17,48 +16,51 @@ class OAuth2HttpServiceProxyConfig(
 ) {
   @Bean
   fun adminServiceProxyFactory(): HttpServiceProxyFactory {
-    return createHttpServiceProxyFactoryFor(Constants.Services.ADMIN_SERVICE)
+    return WebClientConfig.OAuth.adminService(oauth2WebClientBuilder)
   }
 
   @Bean
   fun apiIngressProxyFactory(): HttpServiceProxyFactory {
-    return createHttpServiceProxyFactoryFor(Constants.Services.API_INGRESS)
+    return WebClientConfig.OAuth.apiIngress(oauth2WebClientBuilder)
   }
 
   @Bean
   fun httpPublisherProxyFactory(): HttpServiceProxyFactory {
-    return createHttpServiceProxyFactoryFor(Constants.Services.HTTP_PUBLISHER)
+    return WebClientConfig.OAuth.httpPublisher(oauth2WebClientBuilder)
   }
 
   @Bean
   fun profileServiceProxyFactory(): HttpServiceProxyFactory {
-    return createHttpServiceProxyFactoryFor(Constants.Services.PROFILE_SERVICE)
+    return WebClientConfig.OAuth.profileService(oauth2WebClientBuilder)
   }
 
   @Bean
   fun subscriptionServiceProxyFactory(): HttpServiceProxyFactory {
-    return createHttpServiceProxyFactoryFor(Constants.Services.SUBSCRIPTION_SERVICE)
+    return WebClientConfig.OAuth.subscriptionService(oauth2WebClientBuilder)
   }
 
   @Bean
   fun trafficServiceProxyFactory(): HttpServiceProxyFactory {
-    return createHttpServiceProxyFactoryFor(Constants.Services.TRAFFIC_SERVICE)
+    return WebClientConfig.OAuth.trafficService(oauth2WebClientBuilder)
   }
 
   @Bean
   fun transformationServiceProxyFactory(): HttpServiceProxyFactory {
-    return createHttpServiceProxyFactoryFor(Constants.Services.TRANSFORMATION_SERVICE)
+    return WebClientConfig.OAuth.transformationService(oauth2WebClientBuilder)
   }
 
   @Bean
   fun webhookApiRepoProxyFactory(): HttpServiceProxyFactory {
-    return createHttpServiceProxyFactoryFor(Constants.Services.WEBHOOK_REPO)
+    return WebClientConfig.OAuth.webhookApiRepo(oauth2WebClientBuilder)
   }
 
-  private fun createHttpServiceProxyFactoryFor(baseUrl: String): HttpServiceProxyFactory {
-    return WebClientConfig.createHttpServiceProxyFactoryFor(
-      oauth2WebClientBuilder,
-      baseUrl
-    )
+  @Bean
+  fun hmacSignerRepoProxyFactory(): HttpServiceProxyFactory {
+    return WebClientConfig.OAuth.hmacSigner(oauth2WebClientBuilder)
+  }
+
+  @Bean
+  fun oauth2SignerRepoProxyFactory(): HttpServiceProxyFactory {
+    return WebClientConfig.OAuth.oauth2Signer(oauth2WebClientBuilder)
   }
 }
