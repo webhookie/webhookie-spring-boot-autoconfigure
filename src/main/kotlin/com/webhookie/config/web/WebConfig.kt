@@ -92,7 +92,7 @@ class WebConfig(
     val request = exchange.request
     val response = exchange.response
     if (log.isDebugEnabled) {
-      log.debug("'${request.methodValue} ${request.uri} ${request.id}' {} {} ms",
+      log.debug("'${request.method.name()} ${request.uri} ${request.id}' {} {} ms",
         response.statusCode?.value(),
         finish.toEpochMilli() - start.toEpochMilli())
     }
