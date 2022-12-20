@@ -22,6 +22,7 @@
 
 package com.webhookie.config
 
+import com.webhookie.common.Constants
 import com.webhookie.common.properties.WebhookieSecurityProperties
 import com.webhookie.security.SecurityConfig
 import org.slf4j.Logger
@@ -151,6 +152,13 @@ class WebClientConfig {
         .builder()
         .clientAdapter(webClientAdapter)
         .build()
+    }
+
+    fun createIntercomHttpServiceProxyFactoryFor(
+      webClientBuilder: WebClient.Builder,
+      baseUrl: String,
+    ): HttpServiceProxyFactory {
+      return createHttpServiceProxyFactoryFor(webClientBuilder, "${baseUrl}${Constants.Intercom.INTERCOM_PATH}")
     }
   }
 }
