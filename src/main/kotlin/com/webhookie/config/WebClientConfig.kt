@@ -22,7 +22,6 @@
 
 package com.webhookie.config
 
-import com.webhookie.common.Constants
 import com.webhookie.common.properties.WebhookieSecurityProperties
 import com.webhookie.security.SecurityConfig
 import org.slf4j.Logger
@@ -41,7 +40,9 @@ import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.ExchangeFilterFunctions
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.support.WebClientAdapter
 import org.springframework.web.server.WebFilter
+import org.springframework.web.service.invoker.HttpServiceProxyFactory
 import reactor.core.publisher.Mono
 
 
@@ -98,46 +99,6 @@ class WebClientConfig {
       .filter(reactorDeferringLoadBalancerExchangeFilterFunction)
   }
 
-  @Bean
-  @Scope("prototype")
-  fun adminIntercomClient(basicAuthWebClientBuilder: WebClient.Builder): WebClient {
-    return basicAuthWebClientBuilder
-      .baseUrl("${Constants.Services.ADMIN_SERVICE}${Constants.Intercom.INTERCOM_PATH}")
-      .build()
-  }
-
-  @Bean
-  @Scope("prototype")
-  fun oauth2SignerIntercomClient(basicAuthWebClientBuilder: WebClient.Builder): WebClient {
-    return basicAuthWebClientBuilder
-      .baseUrl("${Constants.Services.OAUTH2_SIGNER}${Constants.Intercom.INTERCOM_PATH}")
-      .build()
-  }
-
-  @Bean
-  @Scope("prototype")
-  fun hmacSignerIntercomClient(basicAuthWebClientBuilder: WebClient.Builder): WebClient {
-    return basicAuthWebClientBuilder
-      .baseUrl("${Constants.Services.HMAC_SIGNER}${Constants.Intercom.INTERCOM_PATH}")
-      .build()
-  }
-
-  @Bean
-  @Scope("prototype")
-  fun trafficIntercomServiceClient(basicAuthWebClientBuilder: WebClient.Builder): WebClient {
-    return basicAuthWebClientBuilder
-      .baseUrl("${Constants.Services.TRAFFIC_SERVICE}${Constants.Intercom.INTERCOM_PATH}")
-      .build()
-  }
-
-  @Bean
-  @Scope("prototype")
-  fun subscriptionIntercomServiceClient(basicAuthWebClientBuilder: WebClient.Builder): WebClient {
-    return basicAuthWebClientBuilder
-      .baseUrl("${Constants.Services.SUBSCRIPTION_SERVICE}${Constants.Intercom.INTERCOM_PATH}")
-      .build()
-  }
-
   fun authTokenExchangeFilterFunction(log: Logger) : ExchangeFilterFunction {
     return ExchangeFilterFunction { request, next ->
       Mono.deferContextual {
@@ -156,70 +117,6 @@ class WebClientConfig {
           }
         }
     }
-  }
-
-  @Bean
-  @Scope("prototype")
-  fun adminServiceClient(oauth2WebClientBuilder: WebClient.Builder): WebClient {
-    return oauth2WebClientBuilder
-      .baseUrl(Constants.Services.ADMIN_SERVICE)
-      .build()
-  }
-
-  @Bean
-  @Scope("prototype")
-  fun apiIngressClient(oauth2WebClientBuilder: WebClient.Builder): WebClient {
-    return oauth2WebClientBuilder
-      .baseUrl(Constants.Services.API_INGRESS)
-      .build()
-  }
-
-  @Bean
-  @Scope("prototype")
-  fun httpPublisherClient(oauth2WebClientBuilder: WebClient.Builder): WebClient {
-    return oauth2WebClientBuilder
-      .baseUrl(Constants.Services.HTTP_PUBLISHER)
-      .build()
-  }
-
-  @Bean
-  @Scope("prototype")
-  fun profileServiceClient(oauth2WebClientBuilder: WebClient.Builder): WebClient {
-    return oauth2WebClientBuilder
-      .baseUrl(Constants.Services.PROFILE_SERVICE)
-      .build()
-  }
-
-  @Bean
-  @Scope("prototype")
-  fun subscriptionServiceClient(oauth2WebClientBuilder: WebClient.Builder): WebClient {
-    return oauth2WebClientBuilder
-      .baseUrl(Constants.Services.SUBSCRIPTION_SERVICE)
-      .build()
-  }
-
-  @Bean
-  @Scope("prototype")
-  fun trafficServiceClient(oauth2WebClientBuilder: WebClient.Builder): WebClient {
-    return oauth2WebClientBuilder
-      .baseUrl(Constants.Services.TRAFFIC_SERVICE)
-      .build()
-  }
-
-  @Bean
-  @Scope("prototype")
-  fun transformationServiceClient(oauth2WebClientBuilder: WebClient.Builder): WebClient {
-    return oauth2WebClientBuilder
-      .baseUrl(Constants.Services.TRANSFORMATION_SERVICE)
-      .build()
-  }
-
-  @Bean
-  @Scope("prototype")
-  fun webhookApiRepoClient(oauth2WebClientBuilder: WebClient.Builder): WebClient {
-    return oauth2WebClientBuilder
-      .baseUrl(Constants.Services.WEBHOOK_REPO)
-      .build()
   }
 
   @Bean
@@ -242,5 +139,18 @@ class WebClientConfig {
 
   companion object {
     const val TOKEN_HEADER_KEY = "AUTHORIZATION_TOKEN_HEADER_KEY"
+
+    fun createHttpServiceProxyFactoryFor(
+      webClientBuilder: WebClient.Builder,
+      baseUrl: String,
+    ): HttpServiceProxyFactory {
+      val webClient = webClientBuilder.baseUrl(baseUrl).build()
+      val webClientAdapter = WebClientAdapter.forClient(webClient)
+
+      return HttpServiceProxyFactory
+        .builder()
+        .clientAdapter(webClientAdapter)
+        .build()
+    }
   }
 }

@@ -7,6 +7,7 @@ com.webhookie.config.LoggerConfig
 com.webhookie.config.CommonBeans
 com.webhookie.config.CryptoConfig
 com.webhookie.config.WebClientConfig
+com.webhookie.config.OAuth2HttpServiceProxyConfig
 com.webhookie.config.web.WebConfig
 com.webhookie.config.web.OpenAPIConfig
 com.webhookie.config.web.LivenessConfig
