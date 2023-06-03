@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.introspect.Annotated
 import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import com.webhookie.common.annotation.SensitiveData
 import com.webhookie.common.crypto.CryptoDriver
-import org.slf4j.Logger
+import com.webhookie.common.extension.log
 
 /**
  *
@@ -12,7 +12,6 @@ import org.slf4j.Logger
  * @since 01:16
  */
 class SensitiveDataAnnotationIntrospector(
-  private val log: Logger,
   private val driver: CryptoDriver,
   private val cryptoProperties: CryptoProperties
 ): NopAnnotationIntrospector() {

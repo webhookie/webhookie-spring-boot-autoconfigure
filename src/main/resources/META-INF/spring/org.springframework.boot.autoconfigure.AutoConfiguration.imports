@@ -3,7 +3,6 @@ com.webhookie.security.SecurityConfig
 com.webhookie.security.TokenDecoderConfig
 com.webhookie.security.SecurityBeans
 com.webhookie.security.HealthBeans
-com.webhookie.config.LoggerConfig
 com.webhookie.config.CommonBeans
 com.webhookie.config.CryptoConfig
 com.webhookie.config.WebClientConfig

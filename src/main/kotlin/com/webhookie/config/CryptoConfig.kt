@@ -6,7 +6,6 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.webhookie.common.crypto.CryptoDriver
 import com.webhookie.config.sensitive.CryptoProperties
 import com.webhookie.config.sensitive.SensitiveDataAnnotationIntrospector
-import org.slf4j.Logger
 import org.springframework.boot.autoconfigure.AutoConfigureBefore
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
@@ -26,11 +25,10 @@ class CryptoConfig {
 
   @Bean
   fun sensitiveDataAnnotationIntrospector(
-    log: Logger,
     cryptoProperties: CryptoProperties,
     driver: CryptoDriver,
   ): SensitiveDataAnnotationIntrospector {
-    return SensitiveDataAnnotationIntrospector(log, driver, cryptoProperties)
+    return SensitiveDataAnnotationIntrospector(driver, cryptoProperties)
   }
 
 

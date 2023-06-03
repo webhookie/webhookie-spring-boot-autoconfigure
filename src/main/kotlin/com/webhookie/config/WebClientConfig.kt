@@ -25,7 +25,7 @@ package com.webhookie.config
 import com.webhookie.common.Constants
 import com.webhookie.common.properties.WebhookieSecurityProperties
 import com.webhookie.security.SecurityConfig
-import org.slf4j.Logger
+import com.webhookie.common.extension.log
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -93,14 +93,13 @@ class WebClientConfig {
   fun oauth2WebClientBuilder(
     reactorDeferringLoadBalancerExchangeFilterFunction: DeferringLoadBalancerExchangeFilterFunction<LoadBalancedExchangeFilterFunction>,
     webClientBuilder: WebClient.Builder,
-    log: Logger,
   ): WebClient.Builder {
     return webClientBuilder
-      .filter(authTokenExchangeFilterFunction(log))
+      .filter(authTokenExchangeFilterFunction())
       .filter(reactorDeferringLoadBalancerExchangeFilterFunction)
   }
 
-  fun authTokenExchangeFilterFunction(log: Logger) : ExchangeFilterFunction {
+  fun authTokenExchangeFilterFunction() : ExchangeFilterFunction {
     return ExchangeFilterFunction { request, next ->
       Mono.deferContextual {
         Mono.just(it)
@@ -110,7 +109,7 @@ class WebClientConfig {
             log.debug("adding AUTHORIZATION header to the downstream request....")
             val newRequest = ClientRequest
               .from(request)
-              .header(HttpHeaders.AUTHORIZATION, ctx.get(TOKEN_HEADER_KEY))
+              .header(HttpHeaders.AUTHORIZATION, ctx[TOKEN_HEADER_KEY])
               .build()
             next.exchange(newRequest)
           } else {

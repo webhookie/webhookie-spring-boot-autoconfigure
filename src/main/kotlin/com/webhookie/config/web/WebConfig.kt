@@ -24,7 +24,7 @@ package com.webhookie.config.web
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.webhookie.common.service.TimeMachine
-import org.slf4j.Logger
+import com.webhookie.common.extension.log
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
 import org.springframework.context.annotation.Bean
@@ -53,7 +53,6 @@ import java.time.Instant
 @ConditionalOnWebApplication
 @ConditionalOnBean(ObjectMapper::class)
 class WebConfig(
-  @Suppress("SpringJavaInjectionPointsAutowiringInspection")
   private val objectMapper: ObjectMapper
 ): WebFluxConfigurer {
   override fun configureHttpMessageCodecs(configurer: ServerCodecConfigurer) {
@@ -68,14 +67,13 @@ class WebConfig(
   @Order(-1)
   @Profile(value = ["!prod"])
   fun logGatewayRequest(
-    log: Logger,
     timeMachine: TimeMachine
   ): WebFilter {
     return WebFilter { exchange, chain ->
       val filterMono = chain.filter(exchange)
       return@WebFilter if (log.isDebugEnabled) {
         filterMono
-          .then(debugRequestResponse(exchange, log, timeMachine.now(), timeMachine))
+          .then(debugRequestResponse(exchange, timeMachine.now(), timeMachine))
       } else {
         filterMono
       }
@@ -84,7 +82,6 @@ class WebConfig(
 
   private fun debugRequestResponse(
     exchange: ServerWebExchange,
-    log: Logger,
     start: Instant,
     timeMachine: TimeMachine,
   ): Mono<Void> = Mono.fromRunnable {
@@ -92,9 +89,14 @@ class WebConfig(
     val request = exchange.request
     val response = exchange.response
     if (log.isDebugEnabled) {
-      log.debug("'${request.method.name()} ${request.uri} ${request.id}' {} {} ms",
+      log.debug(
+        "'{} {} {}' {} {} ms",
+        request.method.name(),
+        request.uri,
+        request.id,
         response.statusCode?.value(),
-        finish.toEpochMilli() - start.toEpochMilli())
+        finish.toEpochMilli() - start.toEpochMilli()
+      )
     }
     if (log.isTraceEnabled) {
       val requestHeaders = request.headers
