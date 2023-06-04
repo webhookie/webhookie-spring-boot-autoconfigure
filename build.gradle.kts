@@ -24,6 +24,8 @@ dependencies {
   compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
   compileOnly("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 
+  compileOnly("org.reflections:reflections:${property("reflectionsVersion")}")
+
   compileOnly("org.springframework.boot:spring-boot-starter-oauth2-client")
   compileOnly("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 

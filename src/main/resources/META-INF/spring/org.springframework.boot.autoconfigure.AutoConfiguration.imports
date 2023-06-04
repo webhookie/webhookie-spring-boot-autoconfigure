@@ -6,8 +6,10 @@ com.webhookie.security.HealthBeans
 com.webhookie.config.CommonBeans
 com.webhookie.config.CryptoConfig
 com.webhookie.config.WebClientConfig
-com.webhookie.config.OAuth2HttpServiceProxyConfig
 com.webhookie.config.web.WebConfig
+com.webhookie.config.web.WebfluxConfig
+com.webhookie.config.web.api.BeanRegistrarConfig
+com.webhookie.config.web.api.ExternalApiConfig
 com.webhookie.config.web.OpenAPIConfig
 com.webhookie.config.web.LivenessConfig
 com.webhookie.config.DebugAgentConfig

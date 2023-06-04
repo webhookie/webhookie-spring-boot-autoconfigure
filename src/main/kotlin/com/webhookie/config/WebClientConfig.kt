@@ -22,29 +22,9 @@
 
 package com.webhookie.config
 
-import com.webhookie.common.Constants
-import com.webhookie.common.properties.WebhookieSecurityProperties
 import com.webhookie.security.SecurityConfig
-import com.webhookie.common.extension.log
-import org.springframework.beans.factory.ObjectProvider
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
-import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
-import org.springframework.cloud.client.loadbalancer.reactive.DeferringLoadBalancerExchangeFilterFunction
-import org.springframework.cloud.client.loadbalancer.reactive.LoadBalancedExchangeFilterFunction
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Scope
-import org.springframework.http.HttpHeaders
-import org.springframework.web.reactive.function.client.ClientRequest
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction
-import org.springframework.web.reactive.function.client.ExchangeFilterFunctions
-import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.support.WebClientAdapter
-import org.springframework.web.server.WebFilter
-import org.springframework.web.service.invoker.HttpServiceProxyFactory
-import reactor.core.publisher.Mono
 
 
 /**
@@ -55,48 +35,30 @@ import reactor.core.publisher.Mono
 @Configuration
 @AutoConfigureAfter(SecurityConfig::class)
 class WebClientConfig {
-  @Bean
-  @Scope("prototype")
-  @ConditionalOnMissingBean(WebClient.Builder::class)
-  fun webClientBuilder(
-    customizerProvider: ObjectProvider<WebClientCustomizer>,
 /*
-    reactorDeferringLoadBalancerExchangeFilterFunction: DeferringLoadBalancerExchangeFilterFunction<LoadBalancedExchangeFilterFunction>
-*/
-  ): WebClient.Builder {
-    val builder = WebClient.builder()
-    customizerProvider.orderedStream().forEach { customizer: WebClientCustomizer ->
-      customizer.customize(
-        builder
-      )
-    }
-    return builder
-//      .filter(reactorDeferringLoadBalancerExchangeFilterFunction)
-  }
-
   @Bean
   @Scope("prototype")
   @ConditionalOnBean(WebhookieSecurityProperties::class)
   fun basicAuthWebClientBuilder(
-    reactorDeferringLoadBalancerExchangeFilterFunction: DeferringLoadBalancerExchangeFilterFunction<LoadBalancedExchangeFilterFunction>,
+//    reactorDeferringLoadBalancerExchangeFilterFunction: DeferringLoadBalancerExchangeFilterFunction<LoadBalancedExchangeFilterFunction>,
     webClientBuilder: WebClient.Builder,
     securityProperties: WebhookieSecurityProperties
   ): WebClient.Builder {
     val user = securityProperties.basic.user
     return webClientBuilder
       .filter(ExchangeFilterFunctions.basicAuthentication(user.username, user.password))
-      .filter(reactorDeferringLoadBalancerExchangeFilterFunction)
+//      .filter(reactorDeferringLoadBalancerExchangeFilterFunction)
   }
 
   @Bean
   @Scope("prototype")
   fun oauth2WebClientBuilder(
-    reactorDeferringLoadBalancerExchangeFilterFunction: DeferringLoadBalancerExchangeFilterFunction<LoadBalancedExchangeFilterFunction>,
+//    reactorDeferringLoadBalancerExchangeFilterFunction: DeferringLoadBalancerExchangeFilterFunction<LoadBalancedExchangeFilterFunction>,
     webClientBuilder: WebClient.Builder,
   ): WebClient.Builder {
     return webClientBuilder
       .filter(authTokenExchangeFilterFunction())
-      .filter(reactorDeferringLoadBalancerExchangeFilterFunction)
+//      .filter(reactorDeferringLoadBalancerExchangeFilterFunction)
   }
 
   fun authTokenExchangeFilterFunction() : ExchangeFilterFunction {
@@ -119,151 +81,8 @@ class WebClientConfig {
     }
   }
 
-  @Bean
-  fun authTokenWebFilter() : WebFilter {
-    return WebFilter { exchange, chain ->
-      chain.filter(exchange)
-        .contextWrite { context ->
-          val token = exchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION)
-          if(token != null) {
-            @Suppress("UnnecessaryVariable")
-            val ctx = context.put(TOKEN_HEADER_KEY, token)
-
-            return@contextWrite ctx
-          }
-
-          return@contextWrite context
-        }
-    }
-  }
-
-  class Intercom {
-    companion object {
-      fun hmacSigner(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
-        return createIntercomHttpServiceProxyFactoryFor(
-          webClientBuilder,
-          Constants.Services.HMAC_SIGNER
-        )
-      }
-
-      fun oauth2Signer(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
-        return createIntercomHttpServiceProxyFactoryFor(
-          webClientBuilder,
-          Constants.Services.OAUTH2_SIGNER
-        )
-      }
-
-      fun trafficService(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
-        return createIntercomHttpServiceProxyFactoryFor(
-          webClientBuilder,
-          Constants.Services.TRAFFIC_SERVICE
-        )
-      }
-
-      fun adminService(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
-        return createIntercomHttpServiceProxyFactoryFor(
-          webClientBuilder,
-          Constants.Services.ADMIN_SERVICE
-        )
-      }
-    }
-  }
-
-  class OAuth {
-    companion object {
-      fun hmacSigner(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
-        return createHttpServiceProxyFactoryFor(
-          webClientBuilder,
-          Constants.Services.HMAC_SIGNER
-        )
-      }
-
-      fun oauth2Signer(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
-        return createHttpServiceProxyFactoryFor(
-          webClientBuilder,
-          Constants.Services.OAUTH2_SIGNER
-        )
-      }
-
-      fun trafficService(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
-        return createHttpServiceProxyFactoryFor(
-          webClientBuilder,
-          Constants.Services.TRAFFIC_SERVICE
-        )
-      }
-
-      fun transformationService(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
-        return createHttpServiceProxyFactoryFor(
-          webClientBuilder,
-          Constants.Services.TRANSFORMATION_SERVICE
-        )
-      }
-
-      fun webhookApiRepo(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
-        return createHttpServiceProxyFactoryFor(
-          webClientBuilder,
-          Constants.Services.WEBHOOK_REPO
-        )
-      }
-
-      fun adminService(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
-        return createHttpServiceProxyFactoryFor(
-          webClientBuilder,
-          Constants.Services.ADMIN_SERVICE
-        )
-      }
-
-      fun profileService(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
-        return createHttpServiceProxyFactoryFor(
-          webClientBuilder,
-          Constants.Services.PROFILE_SERVICE
-        )
-      }
-
-      fun subscriptionService(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
-        return createHttpServiceProxyFactoryFor(
-          webClientBuilder,
-          Constants.Services.SUBSCRIPTION_SERVICE
-        )
-      }
-
-      fun apiIngress(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
-        return createHttpServiceProxyFactoryFor(
-          webClientBuilder,
-          Constants.Services.API_INGRESS
-        )
-      }
-
-      fun httpPublisher(webClientBuilder: WebClient.Builder): HttpServiceProxyFactory {
-        return createHttpServiceProxyFactoryFor(
-          webClientBuilder,
-          Constants.Services.HTTP_PUBLISHER
-        )
-      }
-    }
-  }
-
   companion object {
     const val TOKEN_HEADER_KEY = "AUTHORIZATION_TOKEN_HEADER_KEY"
-
-    fun createHttpServiceProxyFactoryFor(
-      webClientBuilder: WebClient.Builder,
-      baseUrl: String,
-    ): HttpServiceProxyFactory {
-      val webClient = webClientBuilder.baseUrl(baseUrl).build()
-      val webClientAdapter = WebClientAdapter.forClient(webClient)
-
-      return HttpServiceProxyFactory
-        .builder()
-        .clientAdapter(webClientAdapter)
-        .build()
-    }
-
-    fun createIntercomHttpServiceProxyFactoryFor(
-      webClientBuilder: WebClient.Builder,
-      baseUrl: String,
-    ): HttpServiceProxyFactory {
-      return createHttpServiceProxyFactoryFor(webClientBuilder, "${baseUrl}${Constants.Intercom.INTERCOM_PATH}")
-    }
   }
+*/
 }
